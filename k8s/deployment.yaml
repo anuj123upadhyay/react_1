@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: react-app
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      containers:
+        - name: react-app
+          image: anujkupadhyay/my-react-app:latest
+          ports:
+            - containerPort: 5173
+          command: ["npm", "run", "dev"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-service
+spec:
+  type: NodePort
+  selector:
+    app: react-app
+  ports:
+    - protocol: TCP
+      port: 5173
+      targetPort: 5173
+      nodePort: 30007
+
